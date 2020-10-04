@@ -1,0 +1,81 @@
+= repo - The multiple repository tool
+
+Repo is a tool that Google has built on top of Git. Repo helps us manage the
+many Git repositories, does the uploads to our revision control system, and
+automates parts of the Android development workflow. Repo is not meant to
+replace Git, only to make it easier to work with Git in the context of
+Yocto and Android. The repo command is an executable Python script that you
+can put anywhere in your path.
+
+== Origin
+
+NOTE: This is a clone of the origin repository by Google, Inc.
+
+.Origin URLs
+[cols="1,3"]
+|===
+|Git:          |https://gerrit.googlesource.com/git-repo
+|Overview:     |https://source.android.com/source/developing.html
+|Documentation:|https://source.android.com/source/using-repo.html
+|===
+
+== Work with the clone
+
+The clone is potentially out of sync to the origin. A safe and proper workflow
+of development needs to sync the clone with the origin from time to time. For
+this step you need a local sandbox with just these two repositories, the clone
+and the origin (`upstream`) together in one local repository. To achieve this
+working environment, the following steps are necessary:
+
+. *Prepare your Git alias `track`*
+
+ $ git config --global alias.track '!f() { ([ $# -eq 2 ] && \
+       ( echo "Setting tracking for branch " $1 " -> " $2; \
+         git branch --track $1 $2; git branch --set-upstream-to=$2 $1; \
+       ) || ( \
+         git for-each-ref \
+             --format="local: %(refname:short) <--sync--> remote: %(upstream:short)" \
+             refs/heads && echo --Remotes && git remote -v \
+       )); }; f'
+
+. *Clone origin from GitHub*
+
+ $ git clone git@github.com:lipro-yocto/git-repo.git git-repo
+ $ cd git-repo
+
+. *Add google from Google Source*
+
+ $ git remote add upstream https://gerrit.googlesource.com/git-repo
+ $ git remote update upstream
+
+. *Track local master on origin master*
+
+ $ git track master upstream/master
+ $ git track stable upstream/stable
+ $ git track
++
+The last command will show you all branch tracking information. You will get something like:
++
+ local: lpn-launcher <--sync--> remote: origin/lpn-launcher
+ local: master <--sync--> remote: upstream/master
+ local: stable <--sync--> remote: upstream/stable
+ --Remotes
+ origin	git@github.com:lipro-yocto/git-repo.git (fetch)
+ origin	git@github.com:lipro-yocto/git-repo.git (push)
+ upstream	https://gerrit.googlesource.com/git-repo (fetch)
+ upstream	https://gerrit.googlesource.com/git-repo (push)
+
+---
+
+NOTE: There is only a simple link:README.md[README] information from the
+      origin project! A good start point for documentation about Googl's
+      `repo` tool would be:
+
+* https://source.android.com/setup/develop[Android Development / Download]: _Basic Tool Overview_
+* https://source.android.com/setup/develop#installing-repo[Android Development / Download / Repo]: _Installing Repo_
+* https://source.android.com/setup/develop/repo[Android Development / Create]: _Repo Command Reference_
+* https://source.android.com/setup/contribute/life-of-a-patch[Android Development / Contribute / Life of a AOSP Patch]: _Android Open Source Project Contribution Workflow_
+* https://github.com/lipro-yocto/git-repo/blob/lpn-launcher/SUBMITTING_PATCHES.md[Submitting patches]
+* https://github.com/lipro-yocto/git-repo/blob/lpn-launcher/docs/windows.md[Running Repo in Microsoft Windows]
+* https://github.com/lipro-yocto/git-repo/blob/lpn-launcher/docs/manifest-format.md[Manifest Format]
+* https://github.com/lipro-yocto/git-repo/blob/lpn-launcher/docs/repo-hooks.md[Repo Hooks]
