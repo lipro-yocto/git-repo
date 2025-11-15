@@ -5,7 +5,7 @@ name: Test CI
 
 on:
   push:
-    branches: [main, repo-1, stable, maint]
+    branches: [lpn-launcher, main, repo-1, stable, maint]
     tags: [v*]
 
 jobs:
