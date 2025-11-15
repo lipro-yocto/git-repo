@@ -2494,9 +2494,11 @@ later is required to fix a server side protocol bug.
         sync_progress_thread = self._CreateSyncProgressThread(pm, sync_event)
 
         try:
+            # fmt: off
             with multiprocessing.Manager() as manager, ssh.ProxyManager(
                 manager
             ) as ssh_proxy:
+                # fmt: on
                 ssh_proxy.sock()
                 with self.ParallelContext():
                     self.get_parallel_context()["ssh_proxy"] = ssh_proxy
