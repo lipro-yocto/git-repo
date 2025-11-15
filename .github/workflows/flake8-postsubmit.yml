@@ -11,12 +11,12 @@ on:
 jobs:
   lint:
     name: Python Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.9"
+          python-version: "3.13"
       - name: Run flake8
         uses: julianwachholz/flake8-action@v2
         with:
